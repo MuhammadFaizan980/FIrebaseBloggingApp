@@ -3,7 +3,7 @@ package com.tasty.muhammadfaizan.firebasebloggingapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class SingupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

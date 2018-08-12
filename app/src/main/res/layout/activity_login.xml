@@ -23,15 +23,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+
         android:id="@+id/txtName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
-        android:backgroundTint="#ffffff"
+        android:background="@drawable/edit_back"
         android:hint="User Email..."
         android:inputType="textEmailAddress"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="#ffffff"
         android:textColorHint="@color/whiteTrans"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,13 +46,15 @@
     <EditText
         android:id="@+id/txtPass"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#ffffff"
+        android:background="@drawable/edit_back"
         android:hint="User Password..."
         android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="#ffffff"
         android:textColorHint="@color/whiteTrans"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,6 +99,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/pBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

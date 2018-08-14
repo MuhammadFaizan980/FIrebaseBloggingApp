@@ -100,4 +100,10 @@ public class SignupActivity extends AppCompatActivity {
         super.onStart();
         pBarS.setVisibility(View.INVISIBLE);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+        SignupActivity.this.finish();
+    }
 }

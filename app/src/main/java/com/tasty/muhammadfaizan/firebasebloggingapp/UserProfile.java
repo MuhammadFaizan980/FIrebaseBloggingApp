@@ -3,6 +3,7 @@ package com.tasty.muhammadfaizan.firebasebloggingapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +12,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -28,6 +34,7 @@ public class UserProfile extends AppCompatActivity {
     TextView txtName;
     Button btnSaveProfile;
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore firebaseFirestore;
     StorageReference storageReference;
     ProgressBar progressBar;
     Uri uriImg;
@@ -47,7 +54,8 @@ public class UserProfile extends AppCompatActivity {
         btnSaveProfile = findViewById(R.id.btnSaveProf);
         progressBar = findViewById(R.id.pBarP);
         firebaseAuth = FirebaseAuth.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference("/Profile_Images/" + System.currentTimeMillis() + ".jpg");
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference("/Profile_Images/" + firebaseAuth.getCurrentUser().getUid() + ".jpg");
     }
 
     public void getProfileImage() {
@@ -77,13 +85,28 @@ public class UserProfile extends AppCompatActivity {
                             firebaseAuth.getCurrentUser().updateProfile(request).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    progressBar.setVisibility(View.INVISIBLE);
                                     Toast.makeText(UserProfile.this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
-                                    edtName.setVisibility(View.INVISIBLE);
-                                    edtName.setText("");
-                                    txtName.setText(firebaseAuth.getCurrentUser().getDisplayName());
-                                    txtName.setVisibility(View.VISIBLE);
-                                    btnSaveProfile.setVisibility(View.INVISIBLE);
+                                    Map<String, String> mMap = new HashMap<>();
+                                    mMap.put("Name", firebaseAuth.getCurrentUser().getDisplayName());
+                                    mMap.put("Image_URL", String.valueOf(firebaseAuth.getCurrentUser().getPhotoUrl()));
+                                    firebaseFirestore.collection("Users").document(firebaseAuth.getUid()).set(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            edtName.setVisibility(View.INVISIBLE);
+                                            edtName.setText("");
+                                            txtName.setText(firebaseAuth.getCurrentUser().getDisplayName());
+                                            txtName.setVisibility(View.VISIBLE);
+                                            btnSaveProfile.setVisibility(View.INVISIBLE);
+                                            startActivity(new Intent(UserProfile.this, MainActivity.class));
+                                            UserProfile.this.finish();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(UserProfile.this, "Insertion Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -110,7 +133,7 @@ public class UserProfile extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         progressBar.setVisibility(View.INVISIBLE);
-        if (!firebaseAuth.getCurrentUser().getDisplayName().equals("")) {
+        if (firebaseAuth.getCurrentUser().getDisplayName() != null) {
             txtName.setText(firebaseAuth.getCurrentUser().getDisplayName());
             txtName.setVisibility(View.VISIBLE);
             Picasso.get().load(firebaseAuth.getCurrentUser().getPhotoUrl()).into(imageView);

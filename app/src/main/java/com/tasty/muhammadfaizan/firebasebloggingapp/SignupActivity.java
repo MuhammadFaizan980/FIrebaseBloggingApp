@@ -64,7 +64,7 @@ public class SignupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                    startActivity(new Intent(SignupActivity.this, UserProfile.class));
                                     SignupActivity.this.finish();
                                 } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                     pBarS.setVisibility(View.INVISIBLE);

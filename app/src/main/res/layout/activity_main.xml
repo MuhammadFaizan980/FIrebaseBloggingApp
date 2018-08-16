@@ -5,6 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <include layout="@layout/toolbar"/>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnAddPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="480dp"
+        android:clickable="true"
+        app:elevation="19dp"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/include"
+        app:srcCompat="@drawable/ic_add_post" />
 
 </android.support.constraint.ConstraintLayout>

@@ -30,6 +30,7 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singup);
+
         initViews();
         sendUserToFB();
     }
@@ -95,11 +96,13 @@ public class SignupActivity extends AppCompatActivity {
         btnGoBack = findViewById(R.id.goBack);
         firebaseAuth = FirebaseAuth.getInstance();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         pBarS.setVisibility(View.INVISIBLE);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

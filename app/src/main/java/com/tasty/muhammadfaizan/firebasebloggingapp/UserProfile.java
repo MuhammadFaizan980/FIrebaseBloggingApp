@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -34,7 +34,7 @@ public class UserProfile extends AppCompatActivity {
     TextView txtName;
     Button btnSaveProfile;
     FirebaseAuth firebaseAuth;
-    FirebaseFirestore firebaseFirestore;
+    FirebaseDatabase firebaseDatabase;
     StorageReference storageReference;
     ProgressBar progressBar;
     Uri uriImg;
@@ -55,7 +55,7 @@ public class UserProfile extends AppCompatActivity {
         btnSaveProfile = findViewById(R.id.btnSaveProf);
         progressBar = findViewById(R.id.pBarP);
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("/Profile_Images/" + firebaseAuth.getCurrentUser().getUid() + ".jpg");
     }
 
@@ -90,7 +90,7 @@ public class UserProfile extends AppCompatActivity {
                                     Map<String, String> mMap = new HashMap<>();
                                     mMap.put("Name", firebaseAuth.getCurrentUser().getDisplayName());
                                     mMap.put("Image_URL", String.valueOf(firebaseAuth.getCurrentUser().getPhotoUrl()));
-                                    firebaseFirestore.collection("Users").document(firebaseAuth.getUid()).set(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).setValue(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             progressBar.setVisibility(View.INVISIBLE);
@@ -108,6 +108,26 @@ public class UserProfile extends AppCompatActivity {
                                             Toast.makeText(UserProfile.this, "Insertion Failed", Toast.LENGTH_SHORT).show();
                                         }
                                     });
+
+
+//                                    firebaseFirestore.collection("Users").document(firebaseAuth.getUid()).set(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            progressBar.setVisibility(View.INVISIBLE);
+//                                            edtName.setVisibility(View.INVISIBLE);
+//                                            edtName.setText("");
+//                                            txtName.setText(firebaseAuth.getCurrentUser().getDisplayName());
+//                                            txtName.setVisibility(View.VISIBLE);
+//                                            btnSaveProfile.setVisibility(View.INVISIBLE);
+//                                            startActivity(new Intent(UserProfile.this, MainActivity.class));
+//                                            UserProfile.this.finish();
+//                                        }
+//                                    }).addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Toast.makeText(UserProfile.this, "Insertion Failed", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
                                 }
                             });
                         }

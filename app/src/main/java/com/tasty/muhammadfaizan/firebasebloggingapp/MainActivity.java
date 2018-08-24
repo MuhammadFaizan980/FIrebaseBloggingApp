@@ -4,17 +4,30 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     FloatingActionButton btnAdd;
     FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+    RecyclerView recyclerView;
+    List<DataHolder> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +36,57 @@ public class MainActivity extends AppCompatActivity {
 
         initViews();
         inflateMenu();
-        addPost();
+        addNewPost();
+
+        inflateList();
+
+
+
     }
 
-    private void addPost() {
+    private void inflateList() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        final AdapterClass mAdapter = new AdapterClass(MainActivity.this, mList);
+        recyclerView.setAdapter(mAdapter);
+
+        try{
+            firebaseDatabase.getReference("Posts").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    DataHolder obj = dataSnapshot.getValue(DataHolder.class);
+                    mList.add(obj);
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } catch (Exception e){
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
+
+    private void addNewPost() {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,5 +123,8 @@ public class MainActivity extends AppCompatActivity {
         btnAdd = findViewById(R.id.btnAddPost);
         toolbar = findViewById(R.id.mToolbar);
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        recyclerView = findViewById(R.id.MainList);
+        mList = new ArrayList<DataHolder>();
     }
 }

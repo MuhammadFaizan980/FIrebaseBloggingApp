@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +15,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,8 +31,10 @@ public class ActivityNewPost extends AppCompatActivity {
     EditText edtDesc;
     ImageView imgUpload;
     ProgressBar progressBar;
-    FirebaseFirestore firebaseFirestore;
+    FirebaseDatabase firebaseDatabase;
     StorageReference storageReference;
+    DatabaseReference databaseReference;
+    FirebaseAuth firebaseAuth;
     Uri imgUri;
 
 
@@ -56,43 +57,40 @@ public class ActivityNewPost extends AppCompatActivity {
                 btnUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final String des = edtDesc.getText().toString().trim();
-                        if (des.equals("")) {
-                            edtDesc.setError("Cannot be empty!");
-                            edtDesc.requestFocus();
-                        } else {
+                        final String postDesc = edtDesc.getText().toString().trim();
+                        if (!postDesc.equals("")) {
                             progressBar.setVisibility(View.VISIBLE);
                             storageReference.putFile(imgUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                    if (task.isSuccessful()){
-                                        String uri = task.getResult().getDownloadUrl().toString();
-                                        Map<String, Object> mMap = new HashMap<>();
-                                        mMap.put("Image_URL", uri);
-                                        mMap.put("Description", des);
-                                        mMap.put("User_ID", FirebaseAuth.getInstance().getUid());
-                                        firebaseFirestore.collection("Posts").add(mMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
+
+                                    if (task.isSuccessful()) {
+                                        String imageURL = String.valueOf(task.getResult().getDownloadUrl());
+                                        Map<String, String> mMap = new HashMap<>();
+                                        mMap.put("post_url", imageURL);
+                                        mMap.put("Description", postDesc);
+                                        mMap.put("Posted_By", firebaseAuth.getCurrentUser().getDisplayName());
+                                        mMap.put("User_Image", String.valueOf(firebaseAuth.getCurrentUser().getPhotoUrl()));
+                                        databaseReference.push().setValue(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
-                                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                if (task.isSuccessful()){
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    btnUpload.setVisibility(View.INVISIBLE);
-                                                    edtDesc.setVisibility(View.INVISIBLE);
-                                                    Toast.makeText(ActivityNewPost.this, "New post added", Toast.LENGTH_SHORT).show();
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(ActivityNewPost.this, "Post successful", Toast.LENGTH_SHORT).show();
                                                     startActivity(new Intent(ActivityNewPost.this, MainActivity.class));
                                                     ActivityNewPost.this.finish();
                                                 } else {
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    Toast.makeText(ActivityNewPost.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ActivityNewPost.this, "Error", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
-                                    } else {
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(ActivityNewPost.this, "Image Upload Error!", Toast.LENGTH_SHORT).show();
                                     }
+
                                 }
                             });
+                        } else {
+                            edtDesc.setError("Cannot be empty");
+                            edtDesc.requestFocus();
                         }
                     }
                 });
@@ -117,7 +115,9 @@ public class ActivityNewPost extends AppCompatActivity {
         edtDesc = findViewById(R.id.edtDesc);
         imgUpload = findViewById(R.id.imgUpload);
         progressBar = findViewById(R.id.pBarNew);
-        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Posts");
+        firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("/Post_Images/" + System.currentTimeMillis() + ".jpg");
     }
 
@@ -145,6 +145,6 @@ public class ActivityNewPost extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        progressBar.setVisibility(View.INVISIBLE);;
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

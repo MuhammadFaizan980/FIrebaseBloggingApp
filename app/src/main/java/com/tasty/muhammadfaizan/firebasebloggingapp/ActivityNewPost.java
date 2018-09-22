@@ -66,12 +66,14 @@ public class ActivityNewPost extends AppCompatActivity {
 
                                     if (task.isSuccessful()) {
                                         String imageURL = String.valueOf(task.getResult().getDownloadUrl());
+                                        String key = databaseReference.push().getKey();
                                         Map<String, String> mMap = new HashMap<>();
+                                        mMap.put("Reference", key);
                                         mMap.put("post_url", imageURL);
                                         mMap.put("Description", postDesc);
                                         mMap.put("Posted_By", firebaseAuth.getCurrentUser().getDisplayName());
                                         mMap.put("User_Image", String.valueOf(firebaseAuth.getCurrentUser().getPhotoUrl()));
-                                        databaseReference.push().setValue(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        databaseReference.child(key).setValue(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 progressBar.setVisibility(View.INVISIBLE);

@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         addNewPost();
 
         inflateList();
+        toolbar.setTitle("Home");
 
 
 

@@ -1,6 +1,8 @@
 package com.tasty.muhammadfaizan.firebasebloggingapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -68,7 +73,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(context, "Added to likes", Toast.LENGTH_SHORT).show();
                                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(obj.Reference).child("Likes");
-                                reference.child(obj.Posted_By).setValue("Liked");
+                                reference.child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).setValue("Liked");
                                 holder.imgLike.setImageResource(R.drawable.liked);
                                 holder.isLiked = true;
                             }
@@ -132,6 +137,58 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
         } catch (Exception e) {
         }
 
+
+        holder.imgShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("Post share");
+                dialog.setMessage("Are you sure you want to share this post?");
+                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String shareKey = FirebaseDatabase.getInstance().getReference("Posts").push().getKey();
+                        Map<String, String> mMap = new HashMap<String, String>();
+                        mMap.put("Reference", shareKey);// to be done
+                        mMap.put("post_url", obj.post_url);
+                        mMap.put("Description", obj.Description);
+                        mMap.put("Posted_By", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                        mMap.put("User_Image", String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()));
+
+                        FirebaseDatabase.getInstance().getReference("Posts").child(shareKey).setValue(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(context, "You shared this post", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        dialogInterface.dismiss();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                dialog.setCancelable(false);
+
+                dialog.create();
+                dialog.show();
+            }
+        });
+
+
+
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
 

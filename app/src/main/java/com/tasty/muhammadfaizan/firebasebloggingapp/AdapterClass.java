@@ -195,6 +195,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                 final EditText edtComment = mView.findViewById(R.id.edtComment);
                 ImageView imgSend = mView.findViewById(R.id.imgSave);
                 final List<CommentDataHolder> myList = new ArrayList<CommentDataHolder>();
+                final TextView txtNoComment = mView.findViewById(R.id.txtNoComment);
 
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
                 CommentAdapter commentAdapter = new CommentAdapter(myList, context);
@@ -223,6 +224,21 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                commentReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() == 0) {
+                            txtNoComment.setVisibility(View.VISIBLE);
+                        } else {
+                            txtNoComment.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override

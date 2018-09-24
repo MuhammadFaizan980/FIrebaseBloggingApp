@@ -17,4 +17,13 @@
         <item name="android:textColorPrimary">#000000</item>
     </style>
 
+    <style name="mToolbar">
+        <item name="android:textColorSecondary">#ffffff</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+    </style>
+
+    <style name="myPop">
+        <item name="android:textColorPrimary">#000000</item>
+    </style>
+
 </resources>

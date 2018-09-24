@@ -34,6 +34,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:backgroundTint="#ffffff"
             android:id="@+id/edtComment"
             android:layout_width="250dp"
             android:layout_height="wrap_content"

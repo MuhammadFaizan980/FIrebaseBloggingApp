@@ -6,40 +6,61 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/toolbar" />
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/include"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/mToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/mToolbar"
+                app:popupTheme="@style/myPop"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/MainList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </RelativeLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnAddPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="480dp"
         android:clickable="true"
         app:elevation="19dp"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.929"
+        app:layout_constraintHorizontal_bias="0.938"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/include"
-        app:layout_constraintVertical_bias="0.773"
         app:srcCompat="@drawable/ic_add_post" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/MainList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="56dp"
-        app:layout_constraintBottom_toBottomOf="@+id/include"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/include"
-        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/txtNoContent"
@@ -48,15 +69,14 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="248dp"
+        android:layout_marginTop="8dp"
         android:text="No content to display"
         android:textSize="20dp"
         android:textStyle="bold"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/MainList"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/MainList"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

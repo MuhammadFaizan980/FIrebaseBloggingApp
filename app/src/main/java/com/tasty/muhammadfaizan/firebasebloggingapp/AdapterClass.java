@@ -4,11 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -186,8 +188,81 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                 AlertDialog.Builder mDialog = new AlertDialog.Builder(context);
                 View mView = LayoutInflater.from(context).inflate(R.layout.comment_layout, null);
                 mDialog.setView(mView);
-                AlertDialog alertDialog = mDialog.create();
+                final AlertDialog alertDialog = mDialog.create();
                 alertDialog.setCancelable(true);
+
+                RecyclerView recyclerView = mView.findViewById(R.id.commentRecycler);
+                final EditText edtComment = mView.findViewById(R.id.edtComment);
+                ImageView imgSend = mView.findViewById(R.id.imgSave);
+                final List<CommentDataHolder> myList = new ArrayList<CommentDataHolder>();
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                CommentAdapter commentAdapter = new CommentAdapter(myList, context);
+                recyclerView.setAdapter(commentAdapter);
+
+                DatabaseReference commentReference = FirebaseDatabase.getInstance().getReference("Posts").child(obj.Reference).child("Comments");
+
+                commentReference.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        CommentDataHolder myHolder = dataSnapshot.getValue(CommentDataHolder.class);
+                        myList.add(myHolder);
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                imgSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (edtComment.getText().toString().trim().equals("")) {
+                            edtComment.setError("Cannot be empty!");
+                        } else {
+                            String comment = edtComment.getText().toString().trim();
+                            String profileImage = String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+                            String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                            DatabaseReference cReference = FirebaseDatabase.getInstance().getReference("Posts").child(obj.Reference).child("Comments");
+                            Map<String, String> myMap = new HashMap<>();
+                            myMap.put("User_Image", profileImage);
+                            myMap.put("User_Name", userName);
+                            myMap.put("User_Comment", comment);
+                            cReference.push().setValue(myMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(context, "You Commented on this post", Toast.LENGTH_SHORT).show();
+                                        alertDialog.dismiss();
+                                    } else {
+                                        Toast.makeText(context, "Error posting comment, please try again later", Toast.LENGTH_SHORT).show();
+                                        alertDialog.dismiss();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+
+
+
                 alertDialog.show();
             }
         });

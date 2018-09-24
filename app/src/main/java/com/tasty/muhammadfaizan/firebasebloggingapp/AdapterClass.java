@@ -60,6 +60,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
         Picasso.get().load(profile_img).into(holder.imgProfile);
         Picasso.get().load(post_url).into(holder.imgPost);
 
+
         holder.imgLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,6 +180,18 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
             }
         });
 
+        holder.imgComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder mDialog = new AlertDialog.Builder(context);
+                View mView = LayoutInflater.from(context).inflate(R.layout.comment_layout, null);
+                mDialog.setView(mView);
+                AlertDialog alertDialog = mDialog.create();
+                alertDialog.setCancelable(true);
+                alertDialog.show();
+            }
+        });
+
 
     }
 
@@ -198,6 +211,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
         ImageView imgPost;
         ImageView imgLike;
         ImageView imgShare;
+        ImageView imgComment;
         CircleImageView imgProfile;
         TextView txtName;
         TextView txtDesc;
@@ -210,6 +224,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
             imgPost = itemView.findViewById(R.id.img_post);
             imgLike = itemView.findViewById(R.id.imgLike);
             imgShare = itemView.findViewById(R.id.imgShare);
+            imgComment = itemView.findViewById(R.id.imgComment);
             imgProfile = itemView.findViewById(R.id.img_profile);
             txtName = itemView.findViewById(R.id.txt_user_name);
             txtDesc = itemView.findViewById(R.id.txt_desc);

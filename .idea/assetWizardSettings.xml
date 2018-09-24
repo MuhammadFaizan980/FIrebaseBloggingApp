@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_comment_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_send_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,8 +33,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="opacityPercent" value="26" />
-                            <entry key="outputName" value="comment" />
+                            <entry key="color" value="ff5722" />
+                            <entry key="outputName" value="send" />
                             <entry key="sourceFile" value="C:\Users\Muhammad Faizan" />
                           </map>
                         </option>

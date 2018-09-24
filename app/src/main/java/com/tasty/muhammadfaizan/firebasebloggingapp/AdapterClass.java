@@ -265,7 +265,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        Toast.makeText(context, "You Commented on this post", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "You commented on this post", Toast.LENGTH_SHORT).show();
                                         alertDialog.dismiss();
                                     } else {
                                         Toast.makeText(context, "Error posting comment, please try again later", Toast.LENGTH_SHORT).show();

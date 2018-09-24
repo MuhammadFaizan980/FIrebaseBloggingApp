@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -41,7 +43,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 pBarS.setVisibility(View.VISIBLE);
                 String email = txtEmail.getText().toString().trim();
-                String pass = txtPass.getText().toString().trim();
+                final String pass = txtPass.getText().toString().trim();
                 String rePass = txtConfirmPass.getText().toString().trim();
 
                 if (email.equals("") || pass.equals("") || rePass.equals("")) {
@@ -57,6 +59,7 @@ public class SignupActivity extends AppCompatActivity {
                         txtConfirmPass.setError("Cannot be empty");
                     }
                 } else {
+
                     if (!pass.equals(rePass)) {
                         pBarS.setVisibility(View.INVISIBLE);
                         Toast.makeText(SignupActivity.this, "Password fields do not match", Toast.LENGTH_LONG).show();
@@ -65,11 +68,22 @@ public class SignupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+                                    FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getUid()).child("Password").setValue(pass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                pBarS.setVisibility(View.INVISIBLE);
+                                            }
+                                        }
+                                    });
                                     startActivity(new Intent(SignupActivity.this, UserProfile.class));
                                     SignupActivity.this.finish();
                                 } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                     pBarS.setVisibility(View.INVISIBLE);
-                                    Toast.makeText(SignupActivity.this, "user already exists", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SignupActivity.this, "User already exists", Toast.LENGTH_LONG).show();
+                                } else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                                    pBarS.setVisibility(View.INVISIBLE);
+                                    Toast.makeText(SignupActivity.this, "Password must contain at least 6 characters", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

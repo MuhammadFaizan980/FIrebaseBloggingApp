@@ -102,7 +102,7 @@ public class UserProfile extends AppCompatActivity {
                                     Map<String, String> mMap = new HashMap<>();
                                     mMap.put("Name", firebaseAuth.getCurrentUser().getDisplayName());
                                     mMap.put("Image_URL", String.valueOf(firebaseAuth.getCurrentUser().getPhotoUrl()));
-                                    firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).setValue(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             progressBar.setVisibility(View.INVISIBLE);

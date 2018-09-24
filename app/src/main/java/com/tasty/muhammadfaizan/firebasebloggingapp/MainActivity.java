@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +17,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     RecyclerView recyclerView;
+    TextView txtNoContent;
     List<DataHolder> mList;
 
     @Override
@@ -41,14 +44,28 @@ public class MainActivity extends AppCompatActivity {
         inflateList();
         toolbar.setTitle("Home");
 
-
-
     }
 
     private void inflateList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         final AdapterClass mAdapter = new AdapterClass(MainActivity.this, mList);
         recyclerView.setAdapter(mAdapter);
+
+        FirebaseDatabase.getInstance().getReference("Posts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    txtNoContent.setVisibility(View.VISIBLE);
+                } else {
+                    txtNoContent.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         try{
             firebaseDatabase.getReference("Posts").addChildEventListener(new ChildEventListener() {
@@ -126,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         recyclerView = findViewById(R.id.MainList);
+        txtNoContent = findViewById(R.id.txtNoContent);
         mList = new ArrayList<DataHolder>();
     }
 }

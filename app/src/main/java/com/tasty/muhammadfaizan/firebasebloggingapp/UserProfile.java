@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ public class UserProfile extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     StorageReference storageReference;
     ProgressBar progressBar;
+    Toolbar toolbar;
     Uri uriImg;
 
     @Override
@@ -46,6 +48,15 @@ public class UserProfile extends AppCompatActivity {
 
         initViews();
         getProfileImage();
+        toolbar.setTitle("User Profile");
+        toolbar.setNavigationIcon(R.drawable.ic_go_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(UserProfile.this, MainActivity.class));
+                UserProfile.this.finish();
+            }
+        });
     }
 
     private void initViews() {
@@ -54,6 +65,7 @@ public class UserProfile extends AppCompatActivity {
         txtName = findViewById(R.id.textName);
         btnSaveProfile = findViewById(R.id.btnSaveProf);
         progressBar = findViewById(R.id.pBarP);
+        toolbar = findViewById(R.id.mToolbar);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("/Profile_Images/" + firebaseAuth.getCurrentUser().getUid() + ".jpg");
@@ -110,24 +122,6 @@ public class UserProfile extends AppCompatActivity {
                                     });
 
 
-//                                    firebaseFirestore.collection("Users").document(firebaseAuth.getUid()).set(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            progressBar.setVisibility(View.INVISIBLE);
-//                                            edtName.setVisibility(View.INVISIBLE);
-//                                            edtName.setText("");
-//                                            txtName.setText(firebaseAuth.getCurrentUser().getDisplayName());
-//                                            txtName.setVisibility(View.VISIBLE);
-//                                            btnSaveProfile.setVisibility(View.INVISIBLE);
-//                                            startActivity(new Intent(UserProfile.this, MainActivity.class));
-//                                            UserProfile.this.finish();
-//                                        }
-//                                    }).addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                            Toast.makeText(UserProfile.this, "Insertion Failed", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    });
                                 }
                             });
                         }

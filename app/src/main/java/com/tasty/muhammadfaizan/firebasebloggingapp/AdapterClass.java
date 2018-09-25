@@ -3,6 +3,7 @@ package com.tasty.muhammadfaizan.firebasebloggingapp;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,10 +38,12 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
 
     List<DataHolder> mList = new ArrayList<>();
     Context context;
+    RecyclerView recyclerView;
 
-    public AdapterClass(Context context, List mList) {
+    public AdapterClass(Context context, List mList, RecyclerView recyclerView) {
         this.mList = mList;
         this.context = context;
+        this.recyclerView = recyclerView;
     }
 
     @Override
@@ -66,17 +69,26 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
         holder.imgLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                recyclerView.getRecycledViewPool().clear();
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getUid()).child("Likes");
                 try {
                     if (holder.isLiked == false) {
                         databaseReference.child(obj.Reference).setValue("True").addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(context, "Added to likes", Toast.LENGTH_SHORT).show();
-                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(obj.Reference).child("Likes");
-                                reference.child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).setValue("Liked");
-                                holder.imgLike.setImageResource(R.drawable.liked);
-                                holder.isLiked = true;
+                                FirebaseDatabase.getInstance().getReference("Posts").child(obj.Reference).child("Likes").child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).setValue("Liked").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            holder.imgLike.setImageResource(R.drawable.liked);
+                                            holder.isLiked = true;
+                                            Toast.makeText(context, "Added to likes", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(context, "Error Occurred", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
                             }
 
 
@@ -87,7 +99,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 holder.imgLike.setImageResource(R.drawable.unliked);
-                                FirebaseDatabase.getInstance().getReference("Posts").child(obj.Reference).child("Likes").child(obj.Posted_By).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                FirebaseDatabase.getInstance().getReference("Posts").child(obj.Reference).child("Likes").child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Toast.makeText(context, "Removed from likes", Toast.LENGTH_SHORT).show();
@@ -280,6 +292,24 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
 
 
                 alertDialog.show();
+            }
+        });
+
+        holder.imgPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ActivityImageDisplay.class);
+                intent.putExtra("url", obj.post_url);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.imgProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ActivityImageDisplay.class);
+                intent.putExtra("url", obj.User_Image);
+                context.startActivity(intent);
             }
         });
 

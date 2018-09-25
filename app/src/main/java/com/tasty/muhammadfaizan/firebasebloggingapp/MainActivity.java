@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void inflateList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        final AdapterClass mAdapter = new AdapterClass(MainActivity.this, mList);
+        final AdapterClass mAdapter = new AdapterClass(MainActivity.this, mList, recyclerView);
         recyclerView.setAdapter(mAdapter);
 
         FirebaseDatabase.getInstance().getReference("Posts").addValueEventListener(new ValueEventListener() {
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        try{
+        try {
             firebaseDatabase.getReference("Posts").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -78,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -96,10 +96,9 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
-
 
 
     }
@@ -123,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.item_settings: {
                         startActivity(new Intent(MainActivity.this, UserProfile.class));
+                        MainActivity.this.finish();
                         break;
                     }
                     case R.id.item_logout: {
@@ -146,4 +146,5 @@ public class MainActivity extends AppCompatActivity {
         txtNoContent = findViewById(R.id.txtNoContent);
         mList = new ArrayList<DataHolder>();
     }
+
 }

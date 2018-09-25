@@ -28,7 +28,8 @@
             android:name=".SignupActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".UserProfile" />
-        <activity android:name=".ActivityNewPost"></activity>
+        <activity android:name=".ActivityNewPost" />
+        <activity android:name=".ActivityImageDisplay"></activity>
     </application>
 
 </manifest>

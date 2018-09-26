@@ -336,6 +336,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
         ImageView imgLike;
         ImageView imgShare;
         ImageView imgComment;
+        ImageView imgDelete;
         CircleImageView imgProfile;
         TextView txtName;
         TextView txtDesc;
@@ -350,6 +351,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
             imgShare = itemView.findViewById(R.id.imgShare);
             imgComment = itemView.findViewById(R.id.imgComment);
             imgProfile = itemView.findViewById(R.id.img_profile);
+            imgDelete = itemView.findViewById(R.id.imgDelete);
             txtName = itemView.findViewById(R.id.txt_user_name);
             txtDesc = itemView.findViewById(R.id.txt_desc);
             txtLike = itemView.findViewById(R.id.txtLike);

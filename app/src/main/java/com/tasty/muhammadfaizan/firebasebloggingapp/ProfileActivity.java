@@ -90,4 +90,10 @@ public class ProfileActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.myToolbar);
         list = new ArrayList<DataHolder>();
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+        ProfileActivity.this.finish();
+    }
 }

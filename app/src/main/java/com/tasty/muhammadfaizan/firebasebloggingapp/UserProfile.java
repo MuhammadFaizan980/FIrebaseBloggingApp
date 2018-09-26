@@ -154,4 +154,10 @@ public class UserProfile extends AppCompatActivity {
             Picasso.get().load(firebaseAuth.getCurrentUser().getPhotoUrl()).into(imageView);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(UserProfile.this, MainActivity.class));
+        UserProfile.this.finish();
+    }
 }

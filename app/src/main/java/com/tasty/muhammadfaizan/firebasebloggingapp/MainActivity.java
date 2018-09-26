@@ -125,17 +125,19 @@ public class MainActivity extends AppCompatActivity {
                         MainActivity.this.finish();
                         break;
                     }
-                    case R.id.item_profile: {
+                    case R.id.profile: {
                         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                         intent.putExtra("url", String.valueOf(firebaseAuth.getCurrentUser().getPhotoUrl()));
                         intent.putExtra("name", String.valueOf(firebaseAuth.getCurrentUser().getDisplayName()));
                         startActivity(intent);
                         MainActivity.this.finish();
+                        break;
                     }
                     case R.id.item_logout: {
                         firebaseAuth.signOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         MainActivity.this.finish();
+                        break;
                     }
                 }
 

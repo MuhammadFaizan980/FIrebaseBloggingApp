@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/item_profile"
+        android:id="@+id/profile"
         android:icon="@drawable/profile"
         android:title="Profile"
         app:showAsAction="always" />

@@ -29,7 +29,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".UserProfile" />
         <activity android:name=".ActivityNewPost" />
-        <activity android:name=".ActivityImageDisplay"></activity>
+        <activity android:name=".ActivityImageDisplay" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

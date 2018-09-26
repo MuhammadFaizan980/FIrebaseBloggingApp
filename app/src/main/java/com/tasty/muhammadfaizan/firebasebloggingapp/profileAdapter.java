@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,16 +35,18 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
+public class profileAdapter extends RecyclerView.Adapter<profileAdapter.mHolder> {
 
     List<DataHolder> mList = new ArrayList<>();
     Context context;
     RecyclerView recyclerView;
+    String url;
 
-    public AdapterClass(Context context, List mList, RecyclerView recyclerView) {
+    public profileAdapter(Context context, List mList, RecyclerView recyclerView, String url) {
         this.mList = mList;
         this.context = context;
         this.recyclerView = recyclerView;
+        this.url = url;
     }
 
     @Override
@@ -64,6 +67,10 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
         holder.txtDesc.setText(desc);
         Picasso.get().load(profile_img).into(holder.imgProfile);
         Picasso.get().load(post_url).into(holder.imgPost);
+
+        if (!url.equals(obj.User_Image)) {
+            holder.constraintLayout.setMaxHeight(0);
+        }
 
 
         holder.imgLike.setOnClickListener(new View.OnClickListener() {
@@ -276,7 +283,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                             cReference.push().setValue(myMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         Toast.makeText(context, "You commented on this post", Toast.LENGTH_SHORT).show();
                                         alertDialog.dismiss();
                                     } else {
@@ -288,7 +295,6 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                         }
                     }
                 });
-
 
 
                 alertDialog.show();
@@ -303,17 +309,6 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                 context.startActivity(intent);
             }
         });
-
-        holder.imgProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("name", obj.Posted_By);
-                intent.putExtra("url", obj.User_Image);
-                context.startActivity(intent);
-            }
-        });
-
 
     }
 
@@ -338,6 +333,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
         TextView txtName;
         TextView txtDesc;
         TextView txtLike;
+        ConstraintLayout constraintLayout;
         Boolean isLiked = false;
 
         public mHolder(View itemView) {
@@ -349,20 +345,12 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
             imgComment = itemView.findViewById(R.id.imgComment);
             imgProfile = itemView.findViewById(R.id.img_profile);
             txtName = itemView.findViewById(R.id.txt_user_name);
+            constraintLayout = itemView.findViewById(R.id.constLayout);
             txtDesc = itemView.findViewById(R.id.txt_desc);
             txtLike = itemView.findViewById(R.id.txtLike);
 
 
         }
 
-        public void setListener(final DataHolder obj, final mHolder myHolder) {
-            imgLike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-
-        }
     }
 }

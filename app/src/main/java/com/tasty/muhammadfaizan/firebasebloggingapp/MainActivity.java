@@ -130,6 +130,13 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         MainActivity.this.finish();
                     }
+                    case R.id.item_profile: {
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        intent.putExtra("url", String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()));
+                        intent.putExtra("name", String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()));
+                        startActivity(intent);
+                        MainActivity.this.finish();
+                    }
                 }
 
                 return false;

@@ -1,5 +1,6 @@
 package com.tasty.muhammadfaizan.firebasebloggingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                 ProfileActivity.this.finish();
             }
         });

@@ -1,5 +1,6 @@
 package com.tasty.muhammadfaizan.firebasebloggingapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -311,6 +312,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.mHolder> {
                 intent.putExtra("name", obj.Posted_By);
                 intent.putExtra("url", obj.User_Image);
                 context.startActivity(intent);
+                ((Activity)context).finish();
             }
         });
 

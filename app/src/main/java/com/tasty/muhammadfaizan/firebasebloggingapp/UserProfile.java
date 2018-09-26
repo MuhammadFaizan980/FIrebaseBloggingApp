@@ -53,8 +53,12 @@ public class UserProfile extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(UserProfile.this, MainActivity.class));
-                UserProfile.this.finish();
+                if (String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()) == null || String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).equals("")) {
+                    UserProfile.this.finish();
+                } else {
+                    startActivity(new Intent(UserProfile.this, MainActivity.class));
+                    UserProfile.this.finish();
+                }
             }
         });
     }

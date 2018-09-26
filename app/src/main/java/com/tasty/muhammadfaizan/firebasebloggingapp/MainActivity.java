@@ -156,4 +156,13 @@ public class MainActivity extends AppCompatActivity {
         mList = new ArrayList<DataHolder>();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()) == null || String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).equals("")){
+            startActivity(new Intent(MainActivity.this, UserProfile.class));
+            MainActivity.this.finish();
+        }
+    }
 }

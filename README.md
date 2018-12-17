@@ -10,4 +10,11 @@
 
 ![alt text](https://user-images.githubusercontent.com/24224281/50097030-c7812880-023a-11e9-91f0-eabca807fac4.png)
 
+![alt text](https://user-images.githubusercontent.com/24224281/50097644-272c0380-023c-11e9-8daa-46b2311efe55.png)
+
+
+![alt text](https://user-images.githubusercontent.com/24224281/50097607-1a0f1480-023c-11e9-8888-500bdb553e9b.png)
+
+![alt text](https://user-images.githubusercontent.com/24224281/50097605-19767e00-023c-11e9-8d10-b18f652f2eba.png)
+
 
